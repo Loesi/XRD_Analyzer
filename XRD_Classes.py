@@ -48,7 +48,12 @@ class XRD_Data:
             data1d = cast(h5py.Group, entry["data1d"])
 
             intensity = np.array(cast(h5py.Dataset, data1d["I"]))
-            q = np.array(cast(h5py.Dataset, data1d["q"]))
+            if "q" in data1d:
+                q = np.array(cast(h5py.Dataset, data1d["q"]))
+            elif "2th" in data1d:
+                q = np.sin(np.clip(np.deg2rad(np.array(cast(h5py.Dataset, data1d["2th"])))/2, -1, 1)) * (energy * sc.e *  4 * sc.pi) / (1E10 * sc.c * sc.h)
+            else:
+                raise ValueError(f"did not find angle data in {file}, expected 'entry/data1d/q' or 'entry/data1d/2th' dataset but found neither.")
 
         return cls(q, np.arange(intensity.shape[0]), intensity, energy)
 
