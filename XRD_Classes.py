@@ -290,10 +290,10 @@ class XRD_Analyzer(BaseModel):
     def export_processed(self, exp_path: pathlib.Path, in_q = False):
 
         with exp_path.open("w") as f:
-            f.write(",".join(["Two_theta"] + [str(a) for a in self.data.time]))
+            f.write(",".join(["Two_theta"] + [str(a) for a in self.data.time]) + "\n")
             x = self.data.q if in_q else self.data.twoTheta
             for i, v in enumerate(x):
-                f.write(",".join([str(v)] + [str(a) for a in self.data.processed[:, i]]))
+                f.write(",".join([str(v)] + [str(a) for a in self.data.processed[:, i]]) + "\n")
 
         print(f"successfully written to {exp_path}")
 
